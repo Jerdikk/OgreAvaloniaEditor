@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgreAvaloniaEditor", "OgreAvaloniaEditor.csproj", "{C921EBCF-BCA2-4464-A6D9-EB5CB803BAAE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C921EBCF-BCA2-4464-A6D9-EB5CB803BAAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C921EBCF-BCA2-4464-A6D9-EB5CB803BAAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C921EBCF-BCA2-4464-A6D9-EB5CB803BAAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C921EBCF-BCA2-4464-A6D9-EB5CB803BAAE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D09CA2F-A3DD-42E4-BC7B-59E40923E7F5}
+	EndGlobalSection
+EndGlobal

@@ -5,37 +5,46 @@ using OgreAvaloniaEditor.Views;
 using System;
 using org.ogre;
 using System.Threading;
+using System.Xml.Linq;
+using System.Runtime.Intrinsics.Arm;
+using System.IO;
+using System.Collections.Generic;
+using System.Security.AccessControl;
 
 namespace OgreAvaloniaEditor.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+  public class MainWindowViewModel : ViewModelBase
     {
         public IntPtr WindowHandle { get; set; }
         org.ogre.ApplicationContext ctx;
+        string mAppName;
         bool isRunning;
 
 
         private MainWindow _mainWindow;
         public MainWindow mainWindow
-        {  get 
-            { return _mainWindow; } 
+        {
+            get
+            { return _mainWindow; }
             set
             {
                 _mainWindow = value;
             }
         }
 
-        private DateTime _prevTime ;
+        private DateTime _prevTime;
         private DateTime _now;
-        
+        private string mNextRenderer;
+        private ShaderGenerator mShaderGenerator;
 
         public MainWindowViewModel()
         {
             isRunning = false;
             WindowHandle = IntPtr.Zero;
             StartClock();
-        }      
-    
+
+        }
+
         private void StartClock()
         {
             new DispatcherTimer(TimeSpan.FromMilliseconds(16), DispatcherPriority.Normal, TimerTick).Start();
@@ -43,23 +52,26 @@ namespace OgreAvaloniaEditor.ViewModels
 
         void TimerTick(object sender, EventArgs e)
         {
+            _now = DateTime.Now;
+
             if (WindowHandle == IntPtr.Zero)
             {
                 WindowHandle = mainWindow.ogreControl.m_Handle;
+                mAppName = "OgreEditor";
 
-                ctx = new org.ogre.ApplicationContext("OgreTutorialApp");
+                ctx = new org.ogre.ApplicationContext("OgreEditor");
                 ctx.initApp();
 
-                ctx.destroyWindow("OgreTutorialApp");
+                ctx.destroyWindow("OgreEditor");
 
                 org.ogre.NameValueMap misc = new NameValueMap();
                 misc["externalWindowHandle"] = WindowHandle.ToString();
 
                 RenderWindow window = ctx.getRoot().createRenderWindow("Main RenderWindow", 800, 600, false, misc);
 
-                // get a pointer to the already created root
-                Root root = ctx.getRoot();
-                SceneManager scnMgr = root.createSceneManager();
+                // get a pointer to the already created mRoot
+                Root mRoot = ctx.getRoot();
+                SceneManager scnMgr = mRoot.createSceneManager();
 
                 // register our scene with the RTSS
                 ShaderGenerator shadergen = ShaderGenerator.getSingleton();
@@ -86,9 +98,7 @@ namespace OgreAvaloniaEditor.ViewModels
                 viewport.setBackgroundColour(ColourValue.Black);
 
                 cam.setAspectRatio((float)viewport.getActualWidth() / (float)viewport.getActualHeight());
-
-                // and tell it to render into the main window
-                //ctx.getRenderWindow().addViewport(cam);
+                               
 
                 // finally something to render
                 Entity ent = scnMgr.createEntity("Sinbad.mesh");
@@ -104,18 +114,36 @@ namespace OgreAvaloniaEditor.ViewModels
             }
             else
             {
-                _prevTime = _now;
-                _now = DateTime.Now;
-
                 TimeSpan ts = _now - _prevTime;
-
-             //   if (ts.Milliseconds > 10)
-                {
+                _prevTime = _now;
+                if (isRunning)
                     ctx.getRoot().renderOneFrame();
-                }
             }
 
         }
-      
+
+        private void SplitFilename(string qualifiedName, out string outBasename, out string outPath)
+        {
+
+            String path = qualifiedName;
+            // Replace \ with / first
+            path = path.Replace('\\', '/');
+            // split based on final /
+            int i = path.LastIndexOf('/');
+
+            if (i == -1)
+            {
+                outPath = "";
+                outBasename = qualifiedName;
+            }
+            else
+            {
+                outBasename = path.Substring(i + 1, path.Length - i - 1);
+                outPath = path.Substring(0, i + 1);
+            }
+
+        }
+
+
     }
 }
